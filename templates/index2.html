@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة التوقع</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #6b9ae0; /* لون الخلفية */
+            color: #d34848; /* لون النص */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        h2 {
+            color: #2c3e50; /* لون العنوان */
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        form {
+            background-color: #ffffff; /* لون الخلفية للنموذج */
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* ظل الصندوق */
+            width: 100%;
+            max-width: 800px;
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse; /* دمج الحدود */
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd; /* لون حدود الجدول */
+        }
+
+        th {
+            background-color: #f2f2f2; /* لون الخلفية للخلايا */
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #bdc3c7; /* لون الحدود */
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db; /* لون الخلفية للزر */
+            border: none;
+            border-radius: 8px;
+            color: white; /* لون النص في الزر */
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #2980b9; /* لون الخلفية عند تمرير الفأرة */
+            transform: scale(1.05);
+        }
+
+        h3 {
+            color: #e74c3c; /* لون النص للنتيجة */
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>أدخل البيانات للحصول على التوقع:</h2>
+    <form action="{{ url_for('predict') }}" method="post">
+        <table>
+            <tbody>
+
+                <tr>
+                    <td><label >Age </label></td>
+                    <td><input type="text"   id="feature1" name="feature1" required></td>
+
+                    <td><label >sex </label></td>
+                    <td><input type="text"  id="feature2" name="feature2"  required></td>
+
+                    <td><label >Chest pain type </label></td>
+                    <td><input type="text" id="feature3" name="feature3" required></td>
+
+                    <td><label >BP </label></td>
+                    <td><input type="text" id="feature4" name="feature4" required></td>
+
+
+                </tr>
+            <tr>
+                    <td><label >Chlesterol </label></td>
+                    <td><input type="text"  id="feature5" name="feature5"   required></td>
+
+                    <td><label >FBS </label></td>
+                    <td><input type="text"  id="feature6" name="feature6"  required></td>
+
+                    <td><label >EKG </label></td>
+                    <td><input type="text"   id="feature7" name="feature7"  required></td>
+
+                <td><label >MAX HR </label></td>
+                    <td><input type="text"   id="feature8" name="feature8"  required></td>
+
+
+                </tr>
+            <tr>
+                    <td><label >Excerise </label></td>
+                    <td><input type="text"   id="feature9" name="feature9"  required></td>
+
+                    <td><label >ST </label></td>
+                    <td><input type="text"   id="feature10" name="feature10" required></td>
+
+                    <td><label >Splote of ST </label></td>
+                    <td><input type="text" id="feature11" name="feature11" required></td>
+
+
+
+
+                </tr>
+
+            <tr>
+
+
+                    <td><label >Num of Per </label></td>
+                    <td><input type="text" id="12" name="feature12" required></td>
+
+
+
+                    <td><label >Thallum </label></td>
+
+                    <td><input type="text"   id="feature13" name="feature13"  required></td>
+
+
+                </tr>
+
+
+
+
+
+            </tbody>
+        </table>
+        <button type="submit">احصل على التوقع</button>
+    </form>
+
+    <div id="predictionResult"></div>
+
+    <script>
+        function submitPrediction() {
+            // جلب القيم من حقول الإدخال
+            var feature1 = document.getElementById("feature1").value;
+            var feature2 = document.getElementById("feature2").value;
+            var feature3 = document.getElementById("feature4").value;
+            var feature4 = document.getElementById("feature5").value;
+            var feature5 = document.getElementById("feature6").value;
+            var feature6 = document.getElementById("feature7").value;
+            var feature7 = document.getElementById("feature8").value;
+            var feature8 = document.getElementById("feature9").value;
+            var feature9 = document.getElementById("feature10").value;
+            var feature10 = document.getElementById("feature11").value;
+            var feature11 = document.getElementById("feature12").value;
+            var feature12 = document.getElementById("feature13").value;
+            var feature13 = document.getElementById("feature14").value;
+
+
+            // إعداد البيانات لإرسالها إلى نموذج AI
+            var data = {
+                feature1: feature1,
+                feature2: feature2,
+                feature3: feature3,
+                feature4: feature4,
+                feature5: feature5,
+                feature6: feature6,
+                feature7: feature7,
+                feature8: feature8,
+                feature9: feature9,
+                feature10: feature10,
+                feature11: feature11,
+                feature12: feature12,
+                feature13: feature13,
+            };
+
+            // إرسال البيانات إلى خادم AI باستخدام AJAX
+            fetch('https://your-ai-server.com/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                // عرض نتيجة التنبؤ في الصفحة
+                document.getElementById("predictionResult").innerText = "النتيجة: " + result.prediction;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("predictionResult").innerText = "حدث خطأ أثناء التنبؤ.";
+            });
+        }
+    </script>
+
+
+    {% if prediction_text %}
+    <h3>{{ prediction_text }}</h3>
+    {% endif %}
+
+
+{% if input_array is not none %}
+    <h4>القيم المدخلة:</h4>
+    <p>{{ input_array }}</p>
+    {% endif %}
+
+
+</body>
+</html>
